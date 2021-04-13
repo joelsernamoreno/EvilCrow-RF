@@ -1,6 +1,6 @@
 # EvilCrow-RF
 
-![EvilCrow](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/Logo1.png)
+![EvilCrow](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/Logo1.png)
 
 **Idea, development and implementation:** Joel Serna (@JoelSernaMoreno).
 
@@ -47,7 +47,7 @@ We recommend using this device for testing, learning and fun :D
 
 **Be careful with this device and the transmission of signals. Make sure to follow the laws that apply to your country.**
 
-![EvilCrowRF](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/evilcrowrf.png)
+![EvilCrowRF](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/evilcrowrf.png)
 
 # Introduction
 
@@ -109,11 +109,11 @@ The basic firmware allows to receive and transmit basic signals. You can configu
 * Frequency (example 433.92)
 * RxBW bandwidth (Example 58)
 
-![RXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/rx-config.png)
+![RXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-config.png)
 
 ## RX Log Example
 
-![RXLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/rx-log.png)
+![RXLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-log.png)
 
 ## TX Example
 
@@ -122,7 +122,7 @@ The basic firmware allows to receive and transmit basic signals. You can configu
 * Code (example 1642498)
 * Bit Length (example 24)
 
-![TXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/tx-config.png)
+![TXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/tx-config.png)
 
 ## Brute Force Example
 
@@ -130,15 +130,15 @@ The basic firmware allows to receive and transmit basic signals. You can configu
 * Start Code (example 1642490)
 * Bit Length (example 24)
 
-![BruteForce](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/brute-force.png)
+![BruteForce](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/brute-force.png)
 
 ## Pushbuttons Configuration
 
-![PB](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/pb.png)
+![PB](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pb.png)
 
 Configure actions for the pushbuttons. Edit the EvilCrow-RF.ino sketch with your new code:
 
-![Pushbutton](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/pushbutton.png)
+![Pushbutton](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pushbutton.png)
 
 ## Public Demo:
 
@@ -161,7 +161,7 @@ RFQuack is compatible with Evil Crow RF :D
 
 3. Edit build.env with this content:
 
-![Content](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/config-rfquack.png)
+![Content](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/config-rfquack.png)
 
 4. Execute the following command: make docker-build-nc && make build
 
@@ -177,7 +177,7 @@ RFQuack is compatible with Evil Crow RF :D
 
 10. Execute the following command: docker run --device /dev/ttyUSB0 --rm -it rfquack/cli:latest tty -P /dev/ttyUSB0
 
-![Cli](https://github.com/joelsernamoreno/EvilCrow-RF/blob/master/images/cli-rfquack.png)
+![Cli](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/cli-rfquack.png)
 
 ## RX Example
 
