@@ -15,7 +15,9 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E614OA5)
 
-**For Sale at:** Coming soon.
+**For Sale at:** 
+
+* [Aliexpress Shop](https://aliexpress.com/item/1005002476481892.html)
 
 **Summary:**
 
@@ -66,6 +68,11 @@ Evil Crow RF allows the following attacks:
 * Replay attack
 * Brute Force
 * ...
+
+**NOTE:** 
+
+* All devices have been flashed with basic firmware EvilCrow-RF before shipping.
+* Please do not ask me to implement new functions in this code. You can develop code for Evil Crow RF and send PR with your new code.
 
 # Basic Firmware
 
