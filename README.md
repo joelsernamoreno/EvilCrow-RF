@@ -8,7 +8,7 @@
 
 **Manufacturer and distributor:** April Brother (@aprbrother).
 
-**Collaborators:** Little Satan, Ernesto Sánchez (@ernesto_xload), Federico Maggi (@phretor), Andrea Guglielmini (@Guglio95), Trend Micro (@TrendMicro) and RFQuack (@rfquack).
+**Collaborators:** Little Satan, Ernesto Sánchez (@ernesto_xload), Federico Maggi (@phretor), Andrea Guglielmini (@Guglio95) and RFQuack (@rfquack).
 
 The developers and collaborators of this project do not earn money with this. 
 You can invite me for a coffee to further develop Low-Cost hacking devices. If you don't invite me for a coffee, nothing happens, I will continue developing devices.
