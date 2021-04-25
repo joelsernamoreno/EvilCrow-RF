@@ -31,6 +31,7 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 	* TX Example
 	* Brute Force Example
 	* Pushbuttons Configuration
+	* Other Sketches
 	* Public Demo
 4. Advanced Firmware with RFQuack
 	* Installation and first steps
@@ -147,10 +148,22 @@ Configure actions for the pushbuttons. Edit the EvilCrow-RF.ino sketch with your
 
 ![Pushbutton](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pushbutton.png)
 
+## Other Sketches
+
+You can program Evil Crow RF with other configurations without using the basic firmware. In the OtherSketches folder you can find two examples: 
+
+* ASK_RAW_RX.ino: Receive raw data (Only ASK)
+* ASK_RAW_TX.ino: Transmit raw data (Only ASK)
+
+Read the code to know how to configure this for your environment.
+
+Additionally, you can develop other sketches for Evil Crow RF and PR to this repository :)
+
 ## Public Demo:
 
 * Replay attack with pushbuttons: https://twitter.com/JoelSernaMoreno/status/1343573202967126022
 * Simple Brute Force: https://twitter.com/JoelSernaMoreno/status/1344798890516770817
+* Hacking a X-RAY Machine with WHIDelite & EvilCrowRF: https://lucabongiorni.medium.com/hacking-a-x-ray-machine-with-whidelite-evilcrowrf-74b871f8e23b
 
 # Advanced Firmware with RFQuack
 
