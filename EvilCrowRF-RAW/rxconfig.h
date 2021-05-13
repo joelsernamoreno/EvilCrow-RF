@@ -74,17 +74,13 @@ const char RXConfig[] PROGMEM = R"=====(
     <hr>
     <p>RxBW: </p><textarea class="console" form="config" rows="1" cols="50" name="setrxbw"></textarea>
     <hr>
-    <p>Sync Mode: </p><textarea class="console" form="config" rows="1" cols="50" name="syncmode"></textarea>
-    <hr>
-    <p>Pkt Format: </p><textarea class="console" form="config" rows="1" cols="50" name="pktformat"></textarea>
-    <hr>
     <p>Modulation: </p><textarea class="console" form="config" rows="1" cols="50" name="mod"></textarea>
     <hr>
     <p>Deviation: </p><textarea class="console" form="config" rows="1" cols="50" name="deviation"></textarea>
     <hr>
     <p>Data Rate: </p><textarea class="console" form="config" rows="1" cols="50" name="datarate"></textarea>
     <hr>
-    <INPUT type="radio" name="configmodule" value="7" hidden="1" checked="checked">
+    <INPUT type="radio" name="configmodule" value="5" hidden="1" checked="checked">
     <INPUT class="submitBtn" type="submit" value="Apply">
 </form>
 <br>

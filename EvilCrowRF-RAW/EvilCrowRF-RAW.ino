@@ -32,16 +32,10 @@ static unsigned long lastTime = 0;
 String transmit = "";
 long data_to_send[1000];
 
-//int counter = 10;
-
 String tmp_module;
 String tmp_frequency;
 String tmp_codelen;
 String tmp_setrxbw;
-String tmp_syncmode;
-int syncmode;
-String tmp_pktformat;
-int pktformat;
 String tmp_mod;
 int mod;
 String tmp_deviation;
@@ -126,16 +120,12 @@ void setup() {
   controlserver.on("/setrx", [](){
     tmp_frequency = controlserver.arg("frequency");
     tmp_setrxbw = controlserver.arg("setrxbw");
-    tmp_syncmode = controlserver.arg("syncmode");
-    tmp_pktformat = controlserver.arg("pktformat");
     tmp_mod = controlserver.arg("mod");
     tmp_deviation = controlserver.arg("deviation");
     tmp_datarate = controlserver.arg("datarate");
     if (controlserver.hasArg("configmodule")) {
       frequency = tmp_frequency.toFloat();
       setrxbw = tmp_setrxbw.toFloat();
-      syncmode = tmp_syncmode.toInt();
-      pktformat = tmp_pktformat.toInt();
       mod = tmp_mod.toInt();
       deviation = tmp_deviation.toFloat();
       datarate = tmp_datarate.toInt();
@@ -143,8 +133,8 @@ void setup() {
       ELECHOUSE_cc1101.setSpiPin(18, 19, 23, 27);
 
       ELECHOUSE_cc1101.Init();
-      ELECHOUSE_cc1101.setSyncMode(syncmode);        // Combined sync-word qualifier mode. 0 = No preamble/sync. 1 = 16 sync word bits detected. 2 = 16/16 sync word bits detected. 3 = 30/32 sync word bits detected. 4 = No preamble/sync, carrier-sense above threshold. 5 = 15/16 + carrier-sense above threshold. 6 = 16/16 + carrier-sense above threshold. 7 = 30/32 + carrier-sense above threshold.
-      ELECHOUSE_cc1101.setPktFormat(pktformat);       // Format of RX and TX data. 0 = Normal mode, use FIFOs for RX and TX. 1 = Synchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins. 2 = Random TX mode; sends random data using PN9 generator. Used for test. Works as normal mode, setting 0 (00), in RX. 3 = Asynchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins.
+      ELECHOUSE_cc1101.setSyncMode(0);        // Combined sync-word qualifier mode. 0 = No preamble/sync. 1 = 16 sync word bits detected. 2 = 16/16 sync word bits detected. 3 = 30/32 sync word bits detected. 4 = No preamble/sync, carrier-sense above threshold. 5 = 15/16 + carrier-sense above threshold. 6 = 16/16 + carrier-sense above threshold. 7 = 30/32 + carrier-sense above threshold.
+      ELECHOUSE_cc1101.setPktFormat(3);       // Format of RX and TX data. 0 = Normal mode, use FIFOs for RX and TX. 1 = Synchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins. 2 = Random TX mode; sends random data using PN9 generator. Used for test. Works as normal mode, setting 0 (00), in RX. 3 = Asynchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins.
 
       ELECHOUSE_cc1101.setModulation(mod);      // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
       ELECHOUSE_cc1101.setRxBW(setrxbw);
@@ -231,7 +221,7 @@ void loop() {
       }
       logs.println(" ///////// ");
       enableReceive();
-      ELECHOUSE_cc1101.setSidle();
+      //ELECHOUSE_cc1101.setSidle();
     }
   } 
 }
