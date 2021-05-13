@@ -175,7 +175,7 @@ Firmware for receiving and transmitting raw data (Web Panel):
 
 * SSID: RAW Replay
 * Password: 123456789
-* IP: 192.168.1.4
+* IP: 192.168.4.1
 
 ## RAW RX Config Example
 
