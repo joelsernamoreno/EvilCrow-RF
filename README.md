@@ -33,12 +33,16 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 	* Pushbuttons Configuration
 	* Other Sketches
 	* Public Demo
-4. Advanced Firmware with RFQuack
+4. Evil Crow RF RAW
+	* RAW RX Config Example
+	* RAW Log Example
+	* RAW TX Config Example
+5. Advanced Firmware with RFQuack
 	* Installation and first steps
 	* RX Example
 	* TX Example
 	* Public Demo
-5. Evil Crow RF Support
+6. Evil Crow RF Support
 
 # Disclaimer
 
@@ -164,6 +168,49 @@ Additionally, you can develop other sketches for Evil Crow RF and PR to this rep
 * Replay attack with pushbuttons: https://twitter.com/JoelSernaMoreno/status/1343573202967126022
 * Simple Brute Force: https://twitter.com/JoelSernaMoreno/status/1344798890516770817
 * Hacking a X-RAY Machine with WHIDelite & EvilCrowRF: https://lucabongiorni.medium.com/hacking-a-x-ray-machine-with-whidelite-evilcrowrf-74b871f8e23b
+
+# Evil Crow RF RAW
+
+Firmware for receiving and transmitting raw data (Web Panel):
+
+* SSID: RAW Replay
+* Password: 123456789
+* IP: 192.168.1.4
+
+## RAW RX Config Example
+
+* Frequency (example: 433.92)
+
+* RxBW bandwidth (example: 812)
+
+* Sync Mode (example: 0) // Combined sync-word qualifier mode. 0 = No preamble/sync. 1 = 16 sync word bits detected. 2 = 16/16 sync word bits detected. 3 = 30/32 sync word bits detected. 4 = No preamble/sync, carrier-sense above threshold. 5 = 15/16 + carrier-sense above threshold. 6 = 16/16 + carrier-sense above threshold. 7 = 30/32 + carrier-sense above threshold.
+
+* Pkt Format (example: 3) // Format of RX and TX data. 0 = Normal mode, use FIFOs for RX and TX. 1 = Synchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins. 2 = Random TX mode; sends random data using PN9 generator. Used for test. Works as normal mode, setting 0 (00), in RX. 3 = Asynchronous serial mode, Data in on GDO0 and data out on either of the GDOx pins.
+
+* Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
+
+* Desviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
+
+* Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
+
+Example RAW RX Config ASK/OOK:
+
+![RAWRXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawrx.png)
+
+## RAW Log Example
+
+![RAWLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawlog.png)
+
+## RAW TX Config Example
+
+* Frequency (example: 433.92)
+* Modulation (example: 2)
+* RAW DATA (example: 347,23,65,23,54,56,....)
+* Deviation (example: 30.00)
+
+Example RAW RX Config ASK/OOK:
+
+![RAWTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawtx.png)
 
 # Advanced Firmware with RFQuack
 
