@@ -92,6 +92,7 @@ void setup() {
       pinMode(25,OUTPUT);
       ELECHOUSE_cc1101.setSpiPin(18, 19, 23, 27);
       ELECHOUSE_cc1101.Init();
+      ELECHOUSE_cc1101.setModulation(mod);
       ELECHOUSE_cc1101.setMHZ(frequency);
       ELECHOUSE_cc1101.setDeviation(deviation);
       delay(400);
