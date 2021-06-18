@@ -37,12 +37,17 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 	* RAW RX Config Example
 	* RAW Log Example
 	* RAW TX Config Example
-5. Advanced Firmware with RFQuack
+5. Evil Crow RF RAW v2
+	* RAW RX Config Example
+	* RAW Log Example
+	* RAW TX Config Example
+	* Binary TX Config Example
+6. Advanced Firmware with RFQuack
 	* Installation and first steps
 	* RX Example
 	* TX Example
 	* Public Demo
-6. Evil Crow RF Support
+7. Evil Crow RF Support
 
 # Disclaimer
 
@@ -201,12 +206,83 @@ Example RAW RX Config ASK/OOK:
 
 * Frequency (example: 433.92)
 * Modulation (example: 2)
-* RAW DATA (example: 347,23,65,23,54,56,....)
+* RAW Data (example: 347,23,65,23,54,56,....)
 * Deviation (example: 30.00)
+
+Example RAW TX Config ASK/OOK:
+
+![RAWTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawtx.png)
+
+# Evil Crow RF RAW v2
+
+The EvilCrowRF-RAW sketch has been improved. New features:
+
+* Corrected Raw Data
+* Data interpreted in binary
+* Universal Radio Hacker appearance
+* The recipient's tolerance error is higher
+* TX binary data
+
+![NewMenu](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/newmenu.jpg)
+
+* SSID: RAW Replay v2
+* Password: 123456789
+* IP: 192.168.4.1
+
+## RAW RX Config Example
+
+* Frequency (example: 433.92)
+
+* RxBW bandwidth (example: 812)
+
+* Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
+
+* Desviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
+
+* Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
 
 Example RAW RX Config ASK/OOK:
 
+![RAWRXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawrx.png)
+
+## New RAW Log Example
+
+The new log shows the following information:
+
+* Count
+* Raw Data
+* Binary Data with pause
+* Samples/Symbol
+* Corrected Raw Data
+
+![RAWLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/newrawlog.jpg)
+
+## RAW TX Config Example
+
+Transmit Raw Data or Corrected Raw Data.
+
+* Frequency (example: 433.92)
+* Modulation (example: 2)
+* RAW Data (example: 347,23,65,23,54,56,....)
+* Deviation (example: 30.00)
+
+Example RAW TX Config ASK/OOK:
+
 ![RAWTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawtx.png)
+
+## Binary TX Config Example
+
+Transmit Binary Data.
+
+* Frequency (example: 433.92)
+* Modulation (example: 2)
+* Binary Data (example: 1000100010001110111010001101 [Pause:12255 samples] 1000100010001110111010001101 [Pause:12265 samples] 10001000...)
+* Sample Pulse (example: 415)
+* Deviation (example: 0)
+
+Example Binary TX Config ASK/OOK:
+
+![BinaryTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/binarytx.jpg)
 
 # Advanced Firmware with RFQuack
 
