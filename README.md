@@ -19,6 +19,8 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 
 * [Aliexpress Shop](https://aliexpress.com/item/1005002476481892.html)
 
+**Discord Group:** https://discord.gg/jECPUtdrnW
+
 **Summary:**
 
 1. Disclaimer
@@ -163,6 +165,8 @@ You can program Evil Crow RF with other configurations without using the basic f
 
 * ASK_RAW_RX.ino: Receive raw data (Only ASK)
 * ASK_RAW_TX.ino: Transmit raw data (Only ASK)
+* EvilCrowRF-RAWv2_Pushbutton: Two new sketches for using Evil Crow RF with push buttons: RawPushButton_Basic and
+RawPushButton_Web. Read the document EvilCrowRF-RAWv2 Pushbutton.pdf for more information.
 
 Read the code to know how to configure this for your environment.
 
