@@ -49,6 +49,8 @@ String webString;
 String bindata;
 int samplepulse;
 String tmp_samplepulse;
+String tmp_transmissions;
+int transmissions;
 
 // File
 File logs;
@@ -88,6 +90,7 @@ void setup() {
     transmit = controlserver.arg("rawdata");
     tmp_deviation = controlserver.arg("deviation");
     tmp_mod = controlserver.arg("mod");
+    tmp_transmissions = controlserver.arg("transmissions");
 
     if (controlserver.hasArg("configmodule")) {
       int counter=0;
@@ -95,6 +98,7 @@ void setup() {
       frequency = tmp_frequency.toFloat();
       deviation = tmp_deviation.toFloat();
       mod = tmp_mod.toInt();
+      transmissions = tmp_transmissions.toInt();
       pinMode(25,OUTPUT);
       ELECHOUSE_cc1101.setSpiPin(18, 19, 23, 27);
       ELECHOUSE_cc1101.Init();
@@ -112,14 +116,17 @@ void setup() {
         }
       }
 
-      for (int i = 0; i<counter; i+=2){
-        digitalWrite(25,HIGH);
-        delayMicroseconds(data_to_send[i]);
-        digitalWrite(25,LOW);
-        delayMicroseconds(data_to_send[i+1]);
-        Serial.print(data_to_send[i]);
-        Serial.print(",");
-      }
+      for (int r = 0; r<transmissions; r++) {
+        for (int i = 0; i<counter; i+=2){
+          digitalWrite(25,HIGH);
+          delayMicroseconds(data_to_send[i]);
+          digitalWrite(25,LOW);
+          delayMicroseconds(data_to_send[i+1]);
+          Serial.print(data_to_send[i]);
+          Serial.print(",");
+        }
+        delay(2000); //Set this for the delay between retransmissions
+      } 
       Serial.println();
       }
   });
@@ -131,6 +138,7 @@ void setup() {
     tmp_deviation = controlserver.arg("deviation");
     tmp_mod = controlserver.arg("mod");
     tmp_samplepulse = controlserver.arg("samplepulse");
+    tmp_transmissions = controlserver.arg("transmissions");
 
     if (controlserver.hasArg("configmodule")) {
       int counter=0;
@@ -139,6 +147,7 @@ void setup() {
       deviation = tmp_deviation.toFloat();
       mod = tmp_mod.toInt();
       samplepulse = tmp_samplepulse.toInt();
+      transmissions = tmp_transmissions.toInt();
       pinMode(25,OUTPUT);
       ELECHOUSE_cc1101.setSpiPin(18, 19, 23, 27);
       ELECHOUSE_cc1101.Init();
@@ -182,11 +191,14 @@ void setup() {
         Serial.print(",");
       }
 
-      for (int i = 0; i<count_binconvert; i+=2){
-        digitalWrite(25,HIGH);
-        delayMicroseconds(data_to_send[i]);
-        digitalWrite(25,LOW);
-        delayMicroseconds(data_to_send[i+1]);
+      for (int r = 0; r<transmissions; r++) {
+        for (int i = 0; i<count_binconvert; i+=2){
+          digitalWrite(25,HIGH);
+          delayMicroseconds(data_to_send[i]);
+          digitalWrite(25,LOW);
+          delayMicroseconds(data_to_send[i+1]);
+        }
+        delay(2000); //Set this for the delay between retransmissions    
       }
       }
   });

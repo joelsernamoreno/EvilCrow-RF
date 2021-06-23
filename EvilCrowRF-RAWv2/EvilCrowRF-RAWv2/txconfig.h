@@ -75,11 +75,13 @@ const char TXConfig[] PROGMEM = R"=====(
     <hr>
     <p>Modulation: </p><textarea class="console" form="config" rows="1" cols="50" name="mod"></textarea>
     <hr>
-    <p>RAW DATA: </p><textarea class="console" form="config" rows="1" cols="50" name="rawdata"></textarea>
+    <p>RAW Data: </p><textarea class="console" form="config" rows="1" cols="50" name="rawdata"></textarea>
     <hr>
     <p>Deviation: </p><textarea class="console" form="config" rows="1" cols="50" name="deviation"></textarea>
     <hr>
-    <INPUT type="radio" name="configmodule" value="4" hidden="1" checked="checked">
+    <p>Transmissions: </p><textarea class="console" form="config" rows="1" cols="50" name="transmissions"></textarea>
+    <hr>
+    <INPUT type="radio" name="configmodule" value="5" hidden="1" checked="checked">
     <INPUT class="submitBtn" type="submit" value="Transmit">
 </form>
 <br>

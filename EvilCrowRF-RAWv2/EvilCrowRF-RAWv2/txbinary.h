@@ -1,7 +1,7 @@
 const char TXBinary[] PROGMEM = R"=====(
 <html>
 <head>
-    <title>RAW TX Config</title>
+    <title>Binary TX Config</title>
     <meta charset="utf-8">
     <style>
         body {
@@ -81,7 +81,9 @@ const char TXBinary[] PROGMEM = R"=====(
     <hr>
     <p>Deviation: </p><textarea class="console" form="config" rows="1" cols="50" name="deviation"></textarea>
     <hr>
-    <INPUT type="radio" name="configmodule" value="5" hidden="1" checked="checked">
+    <p>Transmissions: </p><textarea class="console" form="config" rows="1" cols="50" name="transmissions"></textarea>
+    <hr>
+    <INPUT type="radio" name="configmodule" value="6" hidden="1" checked="checked">
     <INPUT class="submitBtn" type="submit" value="Transmit">
 </form>
 <br>
