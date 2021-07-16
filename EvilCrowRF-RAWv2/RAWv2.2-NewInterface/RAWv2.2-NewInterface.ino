@@ -22,7 +22,7 @@ const char* ssid = "RAW Replay v2";  // Enter your SSID here
 const char* password = "123456789";  //Enter your Password here
 
 // HTML and CSS style
-const String MENU = "<body><p>Evil Crow RF v1.0</p><div id=\"header\"><body><nav id='menu'><input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label><ul><li><a href='/'>Home</a></li><li><a class='dropdown-arrow'>Config</a><ul class='sub-menus'><li><a href='/txconfig'>RAW TX Config</a></li><li><a href='/txbinary'>Binary TX Config</a></li><li><a href='/rxconfig'>RAW RX Config</a></li><li><a href='/btnconfig'>Button TX Config</a></li></ul></li><li><a class='dropdown-arrow'>RX Log</a><ul class='sub-menus'><li><a href='/viewlog'>RX Logs</a></li><li><a href='/delete'>Delete Logs</a></li><li><a href='/downloadlog'>Download Logs</a></li></ul></li></ul></nav><br></div>";
+const String MENU = "<body><p>Evil Crow RF v1.0</p><div id=\"header\"><body><nav id='menu'><input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label><ul><li><a href='/'>Home</a></li><li><a class='dropdown-arrow'>Config</a><ul class='sub-menus'><li><a href='/txconfig'>RAW TX Config</a></li><li><a href='/txbinary'>Binary TX Config</a></li><li><a href='/rxconfig'>RAW RX Config</a></li><li><a href='/btnconfig'>Button TX Config</a></li></ul></li><li><a class='dropdown-arrow'>RX Log</a><ul class='sub-menus'><li><a href='/viewlog'>RX Logs</a></li><li><a href='/delete'>Delete Logs</a></li><li><a href='/downloadlog'>Download Logs</a></li><li><a href='/cleanspiffs'>Clean SPIFFS</a></li></ul></li></ul></nav><br></div>";
 const String HTML_CSS_STYLING = "<html><head><meta charset=\"utf-8\"><title>Evil Crow RF</title><link rel=\"stylesheet\" href=\"style.css\"><script src=\"lib.js\"></script></head>";
 
 //Pushbutton Pins
@@ -496,7 +496,20 @@ void setup() {
     webString = logs.readString();
     logs.close();
     logs = SPIFFS.open("/logs.txt", "a+");
-    request->send(200, "text/html", HTML_CSS_STYLING+"<head><meta http-equiv=\"refresh\" content=\"5\"></head>" +"View Log: "+serverlog +"\n-----\n"+webString+"</pre></h2>");
+    request->send(200, "text/html", HTML_CSS_STYLING+"<head><meta http-equiv=\"refresh\" content=\"15\"></head>" +"View Log: "+serverlog +"\n-----\n"+webString+"</pre></h2>");
+  });
+
+  controlserver.on("/cleanspiffs", HTTP_GET, [](AsyncWebServerRequest *request){
+    logs.close();
+    logs = SPIFFS.open("/logs.txt", "w");
+    SPIFFS.remove("/");
+    logs.close();
+    logs = SPIFFS.open("/", "w");
+    SPIFFS.remove("/logs.txt");
+    logs.close();
+    request->send(200, "text/html", HTML_CSS_STYLING+ "<body onload=\"JavaScript:AutoRedirect()\">"
+    "<br><h2>SPIFFS and logs cleared!<br>You will be redirected in 5 seconds.</h2></body>" );
+    logs = SPIFFS.open("/logs.txt", "a+");
   });
 
   controlserver.on("/downloadlog", HTTP_GET, [](AsyncWebServerRequest *request){

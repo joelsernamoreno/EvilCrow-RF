@@ -25,6 +25,7 @@ const char RXConfig[] PROGMEM = R"=====(
         <li><a href='/viewlog'>RX Logs</a></li>
         <li><a href='/delete'>Delete Logs</a></li>
         <li><a href='/downloadlog'>Download Logs</a></li>
+        <li><a href='/cleanspiffs'>Clean SPIFFS</a></li>
       </ul>
     </li>
   </ul>
