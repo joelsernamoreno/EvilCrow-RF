@@ -17,6 +17,14 @@
 
 #define samplesize 1000
 
+#if defined(ESP8266)
+    #define RECEIVE_ATTR ICACHE_RAM_ATTR
+#elif defined(ESP32)
+    #define RECEIVE_ATTR IRAM_ATTR
+#else
+    #define RECEIVE_ATTR
+#endif
+
 // Config SSID and password
 const char* ssid = "RAW Replay v2";  // Enter your SSID here
 const char* password = "123456789";  //Enter your Password here
@@ -117,7 +125,6 @@ void TXConfigRAW() {
   ELECHOUSE_cc1101.setModulation(mod);
   ELECHOUSE_cc1101.setMHZ(frequency);
   ELECHOUSE_cc1101.setDeviation(deviation);
-  delay(400);
   ELECHOUSE_cc1101.SetTx();
 
   for (int i = 0; i<1000; i+=2){
@@ -148,9 +155,12 @@ void printReceived(){
   Serial.println(samplecount);
   logs.println("<br>");
   logs.println("<br>");
+  logs.println('\n');
+  logs.println('\n');
   logs.print("Count=");
   logs.println(samplecount);
   logs.println("<br>");
+  logs.println('\n');
   
   for (int i = 1; i<samplecount; i++){
     Serial.print(sample[i]);
@@ -162,9 +172,11 @@ void printReceived(){
   Serial.println();
   logs.println("<br>");
   logs.println("<br>");
+  logs.println('\n');
+  logs.println('\n');
 }
 
-void receiver() {
+void RECEIVE_ATTR receiver() {
   const long time = micros();
   const unsigned int duration = time - lastTime;
 
@@ -262,7 +274,7 @@ void setup() {
         ELECHOUSE_cc1101.setModulation(mod);
         ELECHOUSE_cc1101.setMHZ(frequency);
         ELECHOUSE_cc1101.setDeviation(deviation);
-        delay(400);
+        //delay(400);
         ELECHOUSE_cc1101.SetTx();
 
         for (int r = 0; r<transmissions; r++) {
@@ -285,7 +297,7 @@ void setup() {
         ELECHOUSE_cc1101.setModulation(mod);
         ELECHOUSE_cc1101.setMHZ(frequency);
         ELECHOUSE_cc1101.setDeviation(deviation);
-        delay(400);
+        //delay(400);
         ELECHOUSE_cc1101.SetTx();
 
         for (int r = 0; r<transmissions; r++) {
@@ -365,7 +377,7 @@ void setup() {
         ELECHOUSE_cc1101.setModulation(mod);
         ELECHOUSE_cc1101.setMHZ(frequency);
         ELECHOUSE_cc1101.setDeviation(deviation);
-        delay(400);
+        //delay(400);
         ELECHOUSE_cc1101.SetTx();
 
         for (int r = 0; r<transmissions; r++) {
@@ -386,7 +398,7 @@ void setup() {
         ELECHOUSE_cc1101.setModulation(mod);
         ELECHOUSE_cc1101.setMHZ(frequency);
         ELECHOUSE_cc1101.setDeviation(deviation);
-        delay(400);
+        //delay(400);
         ELECHOUSE_cc1101.SetTx();  
 
         for (int r = 0; r<transmissions; r++) {
@@ -488,7 +500,7 @@ void setup() {
     request->send(200, "text/html", HTML_CSS_STYLING + "<script>alert(\"Button Config OK\")</script>");
   });
 
-  controlserver.on("/viewlog", HTTP_GET, [](AsyncWebServerRequest *request){
+  /*controlserver.on("/viewlog", HTTP_GET, [](AsyncWebServerRequest *request){
     logs.close();
     String serverlog;
     //serverlog += request->arg(0);
@@ -497,6 +509,10 @@ void setup() {
     logs.close();
     logs = SPIFFS.open("/logs.txt", "a+");
     request->send(200, "text/html", HTML_CSS_STYLING+"<head><meta http-equiv=\"refresh\" content=\"15\"></head>" +"View Log: "+serverlog +"\n-----\n"+webString+"</pre></h2>");
+  });*/
+
+  controlserver.on("/viewlog", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/logs.txt", "text/html");
   });
 
   controlserver.on("/cleanspiffs", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -653,14 +669,17 @@ void signalanalyse(){
   }
   logs.println("<br>");
   logs.println("<br>");
+  logs.println('\n');
+  logs.println('\n');
   Serial.println();
   Serial.print("Samples/Symbol: ");
   Serial.println(timingdelay[0]);
   Serial.println();
-  logs.println();
+  logs.println('\n');
   logs.print("Samples/Symbol: ");
   logs.println(timingdelay[0]);
   logs.println("<br>");
+  logs.println('\n');
 
   int smoothcount=0;
   for (int i=1; i<samplecount; i++){
@@ -680,6 +699,7 @@ void signalanalyse(){
   logs.print("Count=");
   logs.println(smoothcount+1);
   logs.println("<br>");
+  logs.println('\n');
   logs.println("Rawdata corrected:");
   for (int i=0; i<smoothcount; i++){
     Serial.print(samplesmooth[i]);
@@ -691,6 +711,7 @@ void signalanalyse(){
   Serial.println();
   Serial.println();
   logs.println("<br>");
+  logs.println('\n');
   return;
 }
 
@@ -719,7 +740,7 @@ void loop() {
     ELECHOUSE_cc1101.setModulation(tmp_btn1_mod);
     ELECHOUSE_cc1101.setMHZ(tmp_btn1_frequency);
     ELECHOUSE_cc1101.setDeviation(tmp_btn1_deviation);
-    delay(400);
+    //delay(400);
     ELECHOUSE_cc1101.SetTx();
 
     for (int r = 0; r<tmp_btn1_transmission; r++) {
@@ -731,12 +752,12 @@ void loop() {
           Serial.print(data_button1[i]);
           Serial.print(",");
         }
-        delay(2000); //Set this for the delay between retransmissions
+        //delay(2000); //Set this for the delay between retransmissions
       }
      Serial.println();
   }
 
-  delay(500);
+  //delay(500);
 
   if (pushbutton2 == LOW) {
     raw_rx = "0";
@@ -750,7 +771,7 @@ void loop() {
     ELECHOUSE_cc1101.setModulation(tmp_btn2_mod);
     ELECHOUSE_cc1101.setMHZ(tmp_btn2_frequency);
     ELECHOUSE_cc1101.setDeviation(tmp_btn2_deviation);
-    delay(400);
+    //delay(400);
     ELECHOUSE_cc1101.SetTx();
 
     for (int r = 0; r<tmp_btn2_transmission; r++) {
@@ -767,7 +788,7 @@ void loop() {
      Serial.println();
   }
 
-  delay(500);
+  //delay(500);
 
   if (pushbutton3 == LOW) {
     raw_rx = "0";
