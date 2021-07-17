@@ -20,6 +20,7 @@
 // Config SSID and password
 const char* ssid = "RAW Replay v2";  // Enter your SSID here
 const char* password = "123456789";  //Enter your Password here
+const int wifi_channel = 12; //Enter your preferred Wi-Fi Channel
 
 // HTML and CSS style
 const String MENU = "<body><p>Evil Crow RF v1.0</p><div id=\"header\"><body><nav id='menu'><input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label><ul><li><a href='/'>Home</a></li><li><a class='dropdown-arrow'>Config</a><ul class='sub-menus'><li><a href='/txconfig'>RAW TX Config</a></li><li><a href='/txbinary'>Binary TX Config</a></li><li><a href='/rxconfig'>RAW RX Config</a></li><li><a href='/btnconfig'>Button TX Config</a></li></ul></li><li><a class='dropdown-arrow'>RX Log</a><ul class='sub-menus'><li><a href='/viewlog'>RX Logs</a></li><li><a href='/delete'>Delete Logs</a></li><li><a href='/downloadlog'>Download Logs</a></li><li><a href='/cleanspiffs'>Clean SPIFFS</a></li></ul></li></ul></nav><br></div>";
@@ -201,7 +202,7 @@ void setup() {
 
   Serial.begin(38400);
   WiFi.mode(WIFI_AP);
-  WiFi.softAP(ssid, password);
+  WiFi.softAP(ssid, password,wifi_channel,8);
   EEPROM.begin(4096);
   SPIFFS.begin(formatOnFail);
   pinMode(push1, INPUT);
