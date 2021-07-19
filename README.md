@@ -194,7 +194,7 @@ Firmware for receiving and transmitting raw data (Web Panel):
 
 * Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
 
-* Desviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
+* Deviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
 
 * Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
 
@@ -241,7 +241,7 @@ The EvilCrowRF-RAW sketch has been improved. New features:
 
 * Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
 
-* Desviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
+* Deviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
 
 * Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
 
