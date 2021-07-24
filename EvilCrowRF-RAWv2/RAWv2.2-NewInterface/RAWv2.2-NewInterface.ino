@@ -585,6 +585,8 @@ void setup() {
     request->send(200, "text/html", HTML_CSS_STYLING+ "<body onload=\"JavaScript:AutoRedirect()\">"
     "<br><h2>SPIFFS and logs cleared!<br>You will be redirected in 5 seconds.</h2></body>" );
     logs = SPIFFS.open("/logs.txt", "a+");
+    logs.println("Viewlog:");
+    logs.println("<br>");
   });
 
   controlserver.on("/downloadlog", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -599,6 +601,8 @@ void setup() {
     webString="";
     logs.close();
     logs = SPIFFS.open("/logs.txt", "a+");
+    logs.println("Viewlog:");
+    logs.println("<br>");
   });
 
   controlserver.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -613,6 +617,8 @@ void setup() {
 
   ELECHOUSE_cc1101.addSpiPin(18, 19, 23, 5, 0);
   ELECHOUSE_cc1101.addSpiPin(18, 19, 23, 27, 1);
+  logs.println("Viewlog:");
+  logs.println("<br>");
 }
 
 void signalanalyse(){
