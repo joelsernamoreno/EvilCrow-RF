@@ -28,6 +28,7 @@ const char TXConfig[] PROGMEM = R"=====(
         <li><a href='/cleanspiffs'>Clean SPIFFS</a></li>
       </ul>
     </li>
+    <li><a href='/jammer'>Simple Jammer</a></li>
   </ul>
 </nav>
 <br>

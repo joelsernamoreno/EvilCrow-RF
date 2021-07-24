@@ -14,6 +14,7 @@
 #include "javascript.h"
 #include "style.h"
 #include "btn3.h"
+#include "jammer.h"
 
 #define samplesize 1000
 
@@ -31,7 +32,7 @@ const char* password = "123456789";  //Enter your Password here
 const int wifi_channel = 12; //Enter your preferred Wi-Fi Channel
 
 // HTML and CSS style
-const String MENU = "<body><p>Evil Crow RF v1.0</p><div id=\"header\"><body><nav id='menu'><input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label><ul><li><a href='/'>Home</a></li><li><a class='dropdown-arrow'>Config</a><ul class='sub-menus'><li><a href='/txconfig'>RAW TX Config</a></li><li><a href='/txbinary'>Binary TX Config</a></li><li><a href='/rxconfig'>RAW RX Config</a></li><li><a href='/btnconfig'>Button TX Config</a></li></ul></li><li><a class='dropdown-arrow'>RX Log</a><ul class='sub-menus'><li><a href='/viewlog'>RX Logs</a></li><li><a href='/delete'>Delete Logs</a></li><li><a href='/downloadlog'>Download Logs</a></li><li><a href='/cleanspiffs'>Clean SPIFFS</a></li></ul></li></ul></nav><br></div>";
+const String MENU = "<body><p>Evil Crow RF v1.0</p><div id=\"header\"><body><nav id='menu'><input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label><ul><li><a href='/'>Home</a></li><li><a class='dropdown-arrow'>Config</a><ul class='sub-menus'><li><a href='/txconfig'>RAW TX Config</a></li><li><a href='/txbinary'>Binary TX Config</a></li><li><a href='/rxconfig'>RAW RX Config</a></li><li><a href='/btnconfig'>Button TX Config</a></li></ul></li><li><a class='dropdown-arrow'>RX Log</a><ul class='sub-menus'><li><a href='/viewlog'>RX Logs</a></li><li><a href='/delete'>Delete Logs</a></li><li><a href='/downloadlog'>Download Logs</a></li><li><a href='/cleanspiffs'>Clean SPIFFS</a></li></ul></li><li><a href='/jammer'>Simple Jammer</a></li></ul></nav><br></div>";
 const String HTML_CSS_STYLING = "<html><head><meta charset=\"utf-8\"><title>Evil Crow RF</title><link rel=\"stylesheet\" href=\"style.css\"><script src=\"lib.js\"></script></head>";
 
 //Pushbutton Pins
@@ -65,10 +66,13 @@ int mod;
 String tmp_deviation;
 float deviation;
 String tmp_datarate;
+String tmp_powerjammer;
+int power_jammer;
 int datarate;
 float frequency;
 float setrxbw;
 String raw_rx = "0";
+String jammer_tx = "0";
 const bool formatOnFail = true;
 String webString;
 String bindata;
@@ -81,6 +85,7 @@ int transmissions;
 int pushbutton1 = 0;
 int pushbutton2 = 0;
 int pushbutton3 = 0;
+byte jammer[11] = {0xff,0xff,};
 
 //BTN Sending Config
 int btn_set_int;
@@ -112,6 +117,9 @@ int tmp_btn3_mod;
 int tmp_btn1_transmission;
 int tmp_btn2_transmission;
 int tmp_btn3_transmission;
+
+// Jammer
+int jammer_pin;
 
 // File
 File logs;
@@ -243,6 +251,52 @@ void setup() {
 
   controlserver.on("/btnconfig", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", ButtonConf);
+  });
+
+  controlserver.on("/jammer", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/html", Jammer);
+  });
+
+  controlserver.on("/stopjammer", HTTP_POST, [](AsyncWebServerRequest *request){
+    jammer_tx = "0";
+    request->send(200, "text/html", HTML_CSS_STYLING + "<script>alert(\"Stop OK\")</script>");
+    ELECHOUSE_cc1101.setSidle(); 
+  });
+
+  controlserver.on("/setjammer", HTTP_POST, [](AsyncWebServerRequest *request){
+    raw_rx = "0";
+    tmp_module = request->arg("module");
+    tmp_frequency = request->arg("frequency");
+    tmp_powerjammer = request->arg("powerjammer");
+
+    if (request->hasArg("configmodule")) {
+      frequency = tmp_frequency.toFloat();
+      power_jammer = tmp_powerjammer.toInt();
+
+      Serial.println("Start");
+
+      if (tmp_module == "1") {
+        pinMode(2,OUTPUT);
+        ELECHOUSE_cc1101.setModul(0);
+        ELECHOUSE_cc1101.Init();
+        ELECHOUSE_cc1101.setMHZ(frequency);
+        ELECHOUSE_cc1101.setPA(power_jammer);
+        ELECHOUSE_cc1101.SetTx();
+        Serial.println("Module 1");
+      }
+      
+      if (tmp_module == "2") {
+        pinMode(25,OUTPUT);
+        ELECHOUSE_cc1101.setModul(1);
+        ELECHOUSE_cc1101.Init();
+        ELECHOUSE_cc1101.setMHZ(frequency);
+        ELECHOUSE_cc1101.setPA(power_jammer);
+        ELECHOUSE_cc1101.SetTx();
+        Serial.println("Module 2");
+      }
+      jammer_tx = "1"; 
+      request->send(200, "text/html", HTML_CSS_STYLING + "<script>alert(\"Jammer OK\")</script>");
+    }  
   });
 
   controlserver.on("/settx", HTTP_POST, [](AsyncWebServerRequest *request){
@@ -733,6 +787,27 @@ void loop() {
     }
   }
 
+  if(jammer_tx == "1") {
+    raw_rx = "0";
+    
+    if (tmp_module == "1") {
+      for (int i = 0; i<12; i+=2){
+        digitalWrite(2,HIGH);
+        delayMicroseconds(jammer[i]);
+        digitalWrite(2,LOW);
+        delayMicroseconds(jammer[i+1]);
+      }
+    }
+    else if (tmp_module == "2") {
+      for (int i = 0; i<12; i+=2){
+        digitalWrite(25,HIGH);
+        delayMicroseconds(jammer[i]);
+        digitalWrite(25,LOW);
+        delayMicroseconds(jammer[i+1]);
+      }
+    }
+  }
+
   if (pushbutton1 == LOW) {
     raw_rx = "0";
     tmp_btn1_deviation = btn1_deviation.toFloat();
@@ -757,7 +832,7 @@ void loop() {
           Serial.print(data_button1[i]);
           Serial.print(",");
         }
-        //delay(2000); //Set this for the delay between retransmissions
+        delay(2000); //Set this for the delay between retransmissions
       }
      Serial.println();
      ELECHOUSE_cc1101.setSidle();

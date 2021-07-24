@@ -1,7 +1,7 @@
-const char RXConfig[] PROGMEM = R"=====(
+const char Jammer[] PROGMEM = R"=====(
 <html>
 <head>
-    <title>RAW RX Config</title>
+    <title>Jammer Config</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
     <script src="lib.js"></script> 
@@ -32,8 +32,7 @@ const char RXConfig[] PROGMEM = R"=====(
   </ul>
 </nav>
 <br>
-<br>
-<FORM action="/setrx" method="post" id="config" target="iframe">
+<FORM action="/setjammer" method="post" id="config" target="iframe">
     <p>Module: </p>
     <label class="custom-select" for="styledSelect1">
     <select name="module" form="config" id="styledSelect1">
@@ -42,27 +41,16 @@ const char RXConfig[] PROGMEM = R"=====(
     </select>
     </label>
     <hr>
-    <p>Modulation: </p>
-    <label class="custom-select" for="styledSelect1">
-    <select name="mod" form="config" id="styledSelect1">
-       <option value="0">2-FSK</option> 
-       <option value="1">GFSK</option>
-       <option value="2">ASK/OOK</option>
-       <option value="3">4-FSK</option> 
-       <option value="4">MSK</option> 
-    </select>
-    </label>
-    <hr>
     <p>Frequency: </p><textarea class="css-input-text" form="config" rows="1" cols="50" name="frequency"></textarea>
     <hr>
-    <p>RxBW: </p><textarea class="css-input-text" form="config" rows="1" cols="50" name="setrxbw"></textarea>
+    <p>Power Jammer: </p><textarea class="css-input-text" form="config" rows="1" cols="50" name="powerjammer"></textarea>
     <hr>
-    <p>Deviation: </p><textarea class="css-input-text" form="config" rows="1" cols="50" name="deviation"></textarea>
-    <hr>
-    <p>Data Rate: </p><textarea class="css-input-text" form="config" rows="1" cols="50" name="datarate"></textarea>
-    <hr>
-    <INPUT type="radio" name="configmodule" value="4" hidden="1" checked="checked">
-    <INPUT class="button-submit" type="submit" value="Apply">
+    <INPUT type="radio" name="configmodule" value="2" hidden="1" checked="checked">
+    <INPUT class="button-submit" type="submit" value="Jammer">
+</form>
+<hr>
+<FORM action="/stopjammer" method="post" id="config" target="iframe">
+    <INPUT class="button-submit" type="submit" value="Stop">
 </form>
 <br>
 <hr>
