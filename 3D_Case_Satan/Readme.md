@@ -5,4 +5,4 @@ You have to find out for yourself how it is best printed.
 I printed it with an SLA printer and had to print the housing parts upright for best printing results.
 
 
-<img src="https://github.com/joelsernamoreno/EvilCrow-RF/tree/main/3D_Case_Satan/img/ECRF_CASE.png"/>
+<img src="https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/3D_Case_Satan/img/ECRF_CASE.png"/>
