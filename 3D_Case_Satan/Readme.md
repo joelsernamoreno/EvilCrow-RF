@@ -1,4 +1,4 @@
-# Screwless housing for Evil Crow Rf V1.
+# Screwless housing for Evil Crow Rf v.1
 
 The STL files do not contain any structures for 3D printing. 
 You have to find out for yourself how it is best printed. 
