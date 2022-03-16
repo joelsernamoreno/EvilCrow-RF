@@ -8,6 +8,8 @@
 
 **Manufacturer and distributor:** April Brother (@aprbrother).
 
+**Distributor from United Kingdom:** KSEC Worldwide (@KSEC_KC).
+
 **Collaborators:** Little Satan, Ernesto Sánchez (@ernesto_xload), Federico Maggi (@phretor), Andrea Guglielmini (@Guglio95) and RFQuack (@rfquack).
 
 The developers and collaborators of this project do not earn money with this. 
@@ -15,9 +17,13 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E614OA5)
 
-**For Sale at:** 
+**For sale with April Brother (shipping from China):** 
 
 * [Aliexpress Shop](https://aliexpress.com/item/1005002476481892.html)
+
+**For sale with KSEC Worldwide (shipping from United Kingdom):**
+
+* Evil Crow RF: https://labs.ksec.co.uk/product/evil-crow-rf/
 
 **Discord Group:** https://discord.gg/jECPUtdrnW
 
