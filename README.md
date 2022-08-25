@@ -31,31 +31,26 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 
 1. Disclaimer
 2. Introduction
-3. Basic Firmware
+3. Firmware	
 	* Installation
-	* First steps with EvilCrow-RF
+	* First steps with Evil Crow RF
 	* RX Config Example
 	* RX Log Example
-	* TX Example
-	* Brute Force Example
-	* Pushbuttons Configuration
-	* Other Sketches
-	* Public Demo
-4. Evil Crow RF RAW
-	* RAW RX Config Example
-	* RAW Log Example
-	* RAW TX Config Example
-5. Evil Crow RF RAW v2
-	* RAW RX Config Example
-	* RAW Log Example
 	* RAW TX Config Example
 	* Binary TX Config Example
-6. Advanced Firmware with RFQuack
+	* Pushbuttons Configuration
+	* Tesla Charge Door Opener
+	* OTA Update
+	* Wi-Fi Config
+	* Power management
+	* Other Sketches
+	* Public Demo
+4. Advanced Firmware with RFQuack
 	* Installation and first steps
 	* RX Example
 	* TX Example
 	* Public Demo
-7. Evil Crow RF Support
+5. Evil Crow RF Support
 
 # Disclaimer
 
@@ -92,13 +87,9 @@ Evil Crow RF allows the following attacks:
 * All devices have been flashed with basic firmware EvilCrow-RF before shipping.
 * Please do not ask me to implement new functions in this code. You can develop code for Evil Crow RF and send PR with your new code.
 
-# Basic Firmware
+# Firmware
 
-The basic firmware allows to receive and transmit basic signals. You can configure the two radio modules through a web panel via WiFi.
-
-* **RX:** Configure modules and frequency for reception.
-* **TX:** Configure modules, frequency, code and bit length to transmit.
-* **Bruteforce:** Configure frequency, start code and bit length to brute force. 
+The basic firmware allows to receive and transmit signals. You can configure the two radio modules through a web panel via WiFi.
 
 ## Installation
 
@@ -106,64 +97,122 @@ The basic firmware allows to receive and transmit basic signals. You can configu
 2. Install pyserial: sudo pip install pyserial
 3. Download and Install the Arduino IDE: https://www.arduino.cc/en/main/software
 4. Download EvilCrow-RF repository: git clone https://github.com/joelsernamoreno/EvilCrow-RF.git
-5. Copy the SmartRC-CC1101-Driver-Lib library included in the EvilCrow-RF repository into Arduino library directory
-6. Copy the rc-switch library included in the EvilCrow-RF repository into Arduino library directory
-7. Open Arduino IDE
-8. Go to File - Preferences. Locate the field "Additional Board Manager URLs:" Add "https://dl.espressif.com/dl/package_esp32_index.json" without quotes. Click "Ok"
-9. Select Tools - Board - Boards Manager. Search for "esp32". Install "esp32 by Espressif system version 1.0.4". Click "Close".
-10. Open the EvilCrow-RF.ino sketch
-11. Select Tools:
+5. Download and Install the Arduino IDE: https://www.arduino.cc/en/main/software
+6. Download the ESPAsyncWebServer library in the Arduino library directory: git clone https://github.com/me-no-dev/ESPAsyncWebServer.git
+7. Download the AsyncElegantOTA library in the Arduino library directory: git clone https://github.com/ayushsharma82/AsyncElegantOTA.git
+8. Download the AsyncTCP library in the Arduino library directory: git clone https://github.com/me-no-dev/AsyncTCP.git
+9. Edit AsyncTCP/src/AsyncTCP.h and change the following:
+
+* #define CONFIG_ASYNC_TCP_USE_WDT 1 to #define CONFIG_ASYNC_TCP_USE_WDT 0
+
+10. Open Arduino IDE
+11. Go to File - Preferences. Locate the field "Additional Board Manager URLs:" Add "https://dl.espressif.com/dl/package_esp32_index.json" without quotes. Click "Ok"
+12. Select Tools - Board - Boards Manager. Search for "esp32". Install "esp32 by Espressif system version 1.0.4". Click "Close".
+13. Open the EvilCrow-RF/EvilCrowRF-RAWv2/RAWv3.0-NewInterface/RAWv3.0-NewInterface.ino sketch
+14. Select Tools:
     * Board - "ESP32 Dev Module".
     * Flash Size - "4MB (32Mb)".
     * CPU Frequency - "240MHz (WiFi/BT)".
     * Flash Frequency - "80MHz"
     * Flash Mode - "DIO"
-12. Upload the code to the EvilCrow-RF device.
-13. Press reset button
+15. Upload the code to the EvilCrow-RF device.
+16. Press reset button
 
 ## First steps with EvilCrow-RF
 
-1. Visualize the wifi networks around you and connect to the EvilCrow-RF (default SSID: EvilCrow-RF).
+1. Visualize the wifi networks around you and connect to the EvilCrow-RF (default SSID: RAW Replay v3).
 2. Enter the password for the wifi network (default password: 123456789).
 3. Open a browser and access the web panel (default IP: 192.168.4.1).
 4. Go!
 
+![Index](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/index.png)
+
 ## RX Config Example
 
-* Module: 1 or 2 (1 for first CC1101 module, 2 for second CC1101 module)
-* Frequency (example 433.92)
-* RxBW bandwidth (Example 58)
+* Module: (1 for first CC1101 module, 2 for second CC1101 module)
+* Modulation: (example ASK/OOK)
+* Frequency: (example 433.92)
+* RxBW bandwidth: (example 58)
+* Deviation: (example 0)
+* Data rate: (example 5)
 
 ![RXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-config.png)
+
+**2-FSK NOTES:**
+
+* Evil Crow RF allows 2-FSK (RX/TX) modulation, this is configured for use with CC1101 module 2. Do not use CC1101 module 1 for 2-FSK RX. 
+
+* You can use 2-FSK TX with module 1 or with module 2. 
+
+* Evil Crow RF allows you to receive signals at the same time on two different frequencies, but this does not work correctly if you use 2-FSK. Make sure you use module 2 for 2-FSK RX, while doing this do not use module 1 for anything or you will not receive the 2-FSK signals correctly. 
+
+* You can receive two signals on different frequencies with ASK/OOK.
 
 ## RX Log Example
 
 ![RXLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-log.png)
 
-## TX Example
+## RAW TX Config Example
 
-* Module: 1 or 2 (1 for first CC1101 module, 2 for second CC1101 module)
-* Frequency (example 433.92)
-* Code (example 1642498)
-* Bit Length (example 24)
+* Module: (1 for first CC1101 module, 2 for second CC1101 module)
+* Modulation: (example ASK/OOK)
+* Transmissions: (number transmissions)
+* Frequency: (example 433.92)
+* RAW Data: (raw data or raw data corrected displayed in RX Log)
+* Deviation: (example 0)
 
 ![TXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/tx-config.png)
 
-## Brute Force Example
+## Binary TX Config Example
 
-* Frequency (example 433.92)
-* Start Code (example 1642490)
-* Bit Length (example 24)
+* Module: (1 for first CC1101 module, 2 for second CC1101 module)
+* Modulation: (example ASK/OOK)
+* Transmissions: (number transmissions)
+* Frequency: (example 433.92)
+* Binary Data: (binary data displayed in RX Log)
+* Sample Pulse: (samples/symbol displayed in RX Log)
+* Deviation: (example 0)
 
-![BruteForce](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/brute-force.png)
+![TXBinary](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/tx-binary.png)
+
 
 ## Pushbuttons Configuration
 
 ![PB](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pb.png)
 
-Configure actions for the pushbuttons. Edit the EvilCrow-RF.ino sketch with your new code:
+* Button: (1 for first pushbutton, 2 for second pushbutton)
+* Modulation: (example ASK/OOK)
+* Transmissions: (number transmissions)
+* Frequency: (example 433.92)
+* RAW Data: (raw data or raw data corrected displayed in RX Log)
+* Deviation: (example 0)
 
 ![Pushbutton](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pushbutton.png)
+
+## Tesla Charge Door Opener
+
+Demo: https://www.youtube.com/watch?v=feNokjfEGgs
+
+## OTA Update
+
+Demo: https://www.youtube.com/watch?v=YQFNLyHu42A
+
+## WiFi Config
+
+Evil Crow RF is configured in AP mode with a default SSID and password. You can change the mode to STATION or AP, change SSID, change password and change Wi-Fi channel remotely from the web panel.
+
+The changes will be stored in the device, every time you restart Evil Crow RF the new Wi-Fi settings will be applied. If you want to return to the default settings, you can delete the stored Wi-Fi configuration from the web panel.
+
+**NOTE:** When changing the Wi-Fi configuration you have to fill in all the fields correctly, if you do not do this you bricked the device.
+
+## Power Management
+
+1. In normal mode, press push2 + reset, then release reset: Evil Crow RF blinks several times and goes to sleep. 
+2. In sleep mode, press push2 + reset, then release reset to wake him up.
+
+Demo: https://www.youtube.com/shorts/K_Qkss6-pEY
+
+**NOTE:** If Evil Crow RF is sleeping and you accidentally press reset, he'll go straight back to sleep. If he isn't asleep and you press reset then he will stay awake too.
 
 ## Other Sketches
 
@@ -183,116 +232,6 @@ Additionally, you can develop other sketches for Evil Crow RF and PR to this rep
 * Replay attack with pushbuttons: https://twitter.com/JoelSernaMoreno/status/1343573202967126022
 * Simple Brute Force: https://twitter.com/JoelSernaMoreno/status/1344798890516770817
 * Hacking a X-RAY Machine with WHIDelite & EvilCrowRF: https://lucabongiorni.medium.com/hacking-a-x-ray-machine-with-whidelite-evilcrowrf-74b871f8e23b
-
-# Evil Crow RF RAW
-
-Firmware for receiving and transmitting raw data (Web Panel):
-
-* SSID: RAW Replay
-* Password: 123456789
-* IP: 192.168.4.1
-
-## RAW RX Config Example
-
-* Frequency (example: 433.92)
-
-* RxBW bandwidth (example: 812)
-
-* Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
-
-* Deviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
-
-* Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
-
-Example RAW RX Config ASK/OOK:
-
-![RAWRXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawrx.png)
-
-## RAW Log Example
-
-![RAWLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawlog.png)
-
-## RAW TX Config Example
-
-* Frequency (example: 433.92)
-* Modulation (example: 2)
-* RAW Data (example: 347,23,65,23,54,56,....)
-* Deviation (example: 30.00)
-
-Example RAW TX Config ASK/OOK:
-
-![RAWTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawtx.png)
-
-# Evil Crow RF RAW v2
-
-The EvilCrowRF-RAW sketch has been improved. New features:
-
-* Corrected Raw Data
-* Data interpreted in binary
-* Universal Radio Hacker appearance
-* The recipient's tolerance error is higher
-* TX binary data
-
-![NewMenu](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/newmenu.jpg)
-
-* SSID: RAW Replay v2
-* Password: 123456789
-* IP: 192.168.4.1
-
-## RAW RX Config Example
-
-* Frequency (example: 433.92)
-
-* RxBW bandwidth (example: 812)
-
-* Modulation (example: 2) // set modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
-
-* Deviation (example: 30.00) // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
-
-* Data Rate (example: 5) // Set the Data Rate in kBaud. Value from 0.02 to 1621.83. Default is 99.97 kBaud!
-
-Example RAW RX Config ASK/OOK:
-
-![RAWRXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawrx.png)
-
-## New RAW Log Example
-
-The new log shows the following information:
-
-* Count
-* Raw Data
-* Binary Data with pause
-* Samples/Symbol
-* Corrected Raw Data
-
-![RAWLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/newrawlog.jpg)
-
-## RAW TX Config Example
-
-Transmit Raw Data or Corrected Raw Data.
-
-* Frequency (example: 433.92)
-* Modulation (example: 2)
-* RAW Data (example: 347,23,65,23,54,56,....)
-* Deviation (example: 30.00)
-
-Example RAW TX Config ASK/OOK:
-
-![RAWTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rawtx.png)
-
-## Binary TX Config Example
-
-Transmit Binary Data.
-
-* Frequency (example: 433.92)
-* Modulation (example: 2)
-* Binary Data (example: 1000100010001110111010001101 [Pause:12255 samples] 1000100010001110111010001101 [Pause:12265 samples] 10001000...)
-* Sample Pulse (example: 415)
-* Deviation (example: 0)
-
-Example Binary TX Config ASK/OOK:
-
-![BinaryTXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/binarytx.jpg)
 
 # Advanced Firmware with RFQuack
 
@@ -355,4 +294,5 @@ This is a simple example, read the documentation for information: https://github
 
 # Evil Crow RF Support
 
-You can open issue or send me a message via twitter (@JoelSernaMoreno).
+* You can ask in the Discord group: https://discord.gg/jECPUtdrnW
+* You can open issue or send me a message via twitter (@JoelSernaMoreno).
