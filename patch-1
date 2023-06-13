@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <meta property="og:title" content="git repository">
+    <meta property="og:description" content="Command-line instructions for accessing Git repository. Jump straight to the repository on iOS.">
+    <meta property="og:image" content="https://workingcopyapp.com/img/terminal.jpg">
+    <link rel="stylesheet" type="text/css" href="/css/style3.css">
+    <meta name="apple-itunes-app" content="app-id=896694807" affiliate-data="at=1000lHq">
+    <link rel="mask-icon" href="/img/mask-icon.svg" color="#399CFC">
+    <style>
+        body {
+            margin-top: 0;
+            background: #132E1F url("../img/scanline.png") repeat fixed;
+            width: 100%;
+        }
+
+        a:link, a:visited, a:active {
+            color: #2B8755;
+            border-bottom: 1px solid #2B8755;
+        }
+
+        a:hover {
+            border-bottom: 2px solid #2B8755;
+        }
+
+        footer {
+            color: #2B8755;
+        }
+
+        .terminal {
+            opacity: 0;
+            color: #35B87C;
+            padding: 1em;
+            font-family: Consolas, Menlo, Courier, monospace;
+
+            transition: opacity 0.6s;
+        }
+
+        *::selection {
+            color: #111;
+            border-color: #111;
+            background: #35B87C;
+        }
+
+        *::-moz-selection {
+            color: #111;
+            border-color: #111;
+            background: #35B87C;
+        }
+
+        a:link, a:visited, a:active, a:hover {
+            font-family: Consolas, Menlo, Courier, monospace;
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 20; /* Sit on top of regular content */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+        }
+
+        @keyframes blink {
+            0% {border-color: #FF0000;}
+            49% {border-color: #FF0000;}
+            50% {border-color: #010101;}
+            100% {border-color: #010101;}
+        }
+
+        /* Modal Content/Box */
+        .guru {
+            display: none;
+            z-index: 25;
+            font-family: Consolas, Menlo, Courier, monospace;
+            font-size: Large;
+            background-color: #010101;
+            background-color: rgba(10,10,10,0.95);
+            color: #FF0000;
+            border: 5px solid #FF0000;
+            white-space: pre-wrap;
+            margin: 0% auto; /* 15% from the top and centered */
+            padding: 10px;
+
+            animation-name: blink;
+            animation-duration: 1.2s;
+            animation-iteration-count: infinite;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        footer {
+            display: none;
+        }
+
+    </style>
+
+    <script>
+        function rev(s) { return s.length <= 1 ? s : rev(s.substr(1)) + s.substr(0,1); }
+
+        function showError(message) {
+            $('.guru').text(message);
+            $('.guru').show();
+            $('.modal').show();
+
+            $("html, body").animate({ scrollTop: 0 });
+        }
+
+        (function() {
+            function decodeArgs() {
+                var args = {};
+                var data = window.location.search;
+                if(!data || data.length == 0) data = window.location.hash;
+                if(data) {
+                    data = data.substr(1);
+                    var parts = data.split('&');
+                    for(var k = 0; k < parts.length; ++k) {
+                        var keyval = parts[k].split('=');
+                        if(keyval.length != 2) continue;
+
+                        var key = decodeURIComponent(keyval[0]);
+                        args[key] = decodeURIComponent(keyval[1]);
+                    }
+                }
+                return args;
+            }
+
+            function dirnameFromRemote(remote) {
+                var withoutSlash = remote.replace(/\/+$/, "");
+                var parts = withoutSlash.split('/');
+                var name = parts[parts.length - 1];
+                name = name.replace(/\.git$/, "");
+                return name;
+            }
+
+            // convert secure shell remotes to https://
+            function linkForRemote(remote) {
+                // leave http(s) style remotes alone, they are already links
+                if(remote.indexOf('https://') == 0 ||
+                        remote.indexOf('http://') == 0) return remote;
+
+                // skip protocol entirely, we do not care if missing (scp style)
+                // or is ssh:// or git://
+                var link = remote.replace(/^[a-z]:\/\/]/, "");
+
+                // skip git username since this is used when ssh key is actual user identifier
+                link = link.replace(/^git@/, "");
+
+                // convert : separator to slash
+                link = link.replace(':', '/');
+
+                // remove trailing .git
+                link = link.replace(/.git\/?$/, '');
+
+                // make sure link ends with slash
+                if(link.length >= 1 && link.charAt(link.length - 1) != '/') {
+                    link += '/';
+                }
+
+                return 'https://' + link;
+            }
+
+            function isBitBucket(args) {
+                var repo = args['repo'];
+                return repo.indexOf("bitbucket.org") >= 0;
+            }
+
+            function fileUrlForArgs(link, args) {
+                var withoutSlash = link.replace(/\/+$/, "");
+                if(!args['path']) return null;
+                if(isBitBucket(args)) {
+                    var showAt = true;
+
+                    var where = args["commit"];
+                    if(!where) {
+                        where = args["branch"];
+                        showAt = false;
+                    }
+                    if(!where) where = "HEAD";
+
+                    var url = withoutSlash + "/src/" + where + "/" + encodeURIComponent(args['path']);
+                    if(showAt && args["branch"]) {
+                        url += "?at=" + encodeURIComponent(args["branch"]);
+                    }
+                    return url;
+                }
+
+                var where = args['commit'];
+                if(!where) where = args['branch'];
+                if(!where) where = 'HEAD';
+
+                return withoutSlash + "/blob/" + encodeURIComponent(where) +
+                        "/" + encodeURIComponent(args['path']);
+            }
+
+            function branchUrlForArgs(link, args) {
+                if(!args['branch']) return null;
+                var withoutSlash = link.replace(/\/+$/, "");
+                var subdir = isBitBucket(args) ? '/branch/' : '/tree/';
+                return withoutSlash + subdir + encodeURIComponent(args['branch']);
+            }
+
+            function commitUrlForArgs(link, args) {
+                if(!args['commit']) return null;
+                var withoutSlash = link.replace(/\/+$/, "");
+                if(isBitBucket(args)) {
+                    var url = withoutSlash + "/commits/" + encodeURIComponent(args['commit']);
+                    if(args["branch"]) {
+                        url += "?at=" + encodeURIComponent(args["branch"]);
+                    }
+                    return url;
+                }
+
+                return withoutSlash + "/commit/" + encodeURIComponent(args['commit']);
+
+            }
+
+            function hostnameForUrl(url) {
+                var anchor = document.createElement('a');
+                anchor.href = url;
+                return  anchor.hostname;
+            }
+
+            function escape(unsafe) {
+                return unsafe
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+            }
+
+            // if text contains anything that needs slash escapes or has space,
+            // it is returned in quotes and with slashes, otherwise original string
+            // is returned
+            function quoteSlashIfNeeded(string) {
+                var quoted = string.replace(/\\/g, '\\\\').
+                                    replace(/\u0008/g, '\\b').
+                                    replace(/\t/g, '\\t').
+                                    replace(/\n/g, '\\n').
+                                    replace(/\f/g, '\\f').
+                                    replace(/\r/g, '\\r').
+                                    replace(/'/g, '\\\'').
+                                    replace(/"/g, '\\"');
+                var needsQuote = quoted != string || string.indexOf(' ') >= 0;
+                if(!needsQuote) return string;
+                return '"' + quoted + '"';
+            }
+
+            function titleForArgs(args) {
+                if(args['path']) {
+                    var parts = args['path'].split("/");
+                    var last = parts[parts.length - 1];
+                    if(last.length == 0 && parts.length >= 2) last = parts[parts.length - 2];
+                    if(last.length > 0) return last;
+                    return args['path'];
+                }
+                if(args['commit']) return "commit " + args['commit'].substr(0, 7);
+                if(args['branch']) return args['branch'] + " branch";
+                if(args['repo']) return dirnameFromRemote(args['repo']) + " repository";
+                return "";
+            }
+
+            function descForArgs(args) {
+                if(args['path'] || args['commit'] || args['branch']) {
+                    return titleForArgs(args) + " in " + dirnameFromRemote(args['repo']);
+                }
+                return titleForArgs(args);
+            }
+
+            // return html for either anchor or raw text
+            function possibleAnchor(title, linkOrNull) {
+                if(!linkOrNull) return escape(title);
+                return '<a class="guess" href="' + escape(linkOrNull) + '">' + escape(title) + '</a>';
+            }
+
+            function populateTerminal() {
+                var args = decodeArgs();
+                var repo = args['repo'];
+
+                var thisHost = location.hostname;
+
+                var footer = "\n\n\n# Learn more about Working Copy, the powerful Git client for iOS\n" +
+                        "links <a class=\"guess\" href=\"https://" + thisHost + "/manual/\">https://" + thisHost +
+                        "/manual/</a>\n\n\n";
+
+                var html = '';
+                if(!repo) {
+                    html = "\n# This page normally contains command-line instructions for Git repositories.\n";
+                    html += "# Links to this page are created by <a class=\"guess\" href=\"https://workingcopyapp.com/\">Working Copy</a> but this link is not valid.";
+                } else {
+                    var link = linkForRemote(repo);
+                    var dirname = dirnameFromRemote(link);
+                    var hostname = hostnameForUrl(link);
+                    var title = titleForArgs(args);
+                    var desc = descForArgs(args);
+
+                    document.title = title;
+
+                    // intro
+                    var html = "# This page contains command-line instructions for accessing " + escape(desc) + "\n";
+                    html += "# You can jump straight to " + escape(title) + " from Safari on iOS when <a class=\"guess\" href=\"https://" + thisHost +
+                            "/\">Working Copy</a> is installed.\n\n";
+
+                    // repo cloning
+                    html += '# clone <a class="guess" href="' + escape(link) + '">' + escape(dirname) +
+                            '</a> from <a class="guess" href="' + escape("https://" + hostname) + '">' + escape(hostname) + "</a>\n";
+                    html += "git clone " + escape(repo) + "\n";
+                    html += "cd " + escape(dirname) + "\n";
+
+                    var path = args['path'];
+                    if(path) {
+                        var url = fileUrlForArgs(link, args);
+                        var escapedPath = escape(path);
+
+                        var len = path.length;
+                        if(len >= 1 && path.substr(-1) == "/") {
+                            // list dir contents
+                            escapedPath = escapedPath.substr(0, escapedPath.length - 1) // skip trailing slash
+                            html += "\n# list contents of " + possibleAnchor(title, url) + "\n";
+                            html += "ls " + quoteSlashIfNeeded(escapedPath) + "\n";
+                        } else {
+                            // view file content
+                            html += "\n# view contents of " + possibleAnchor(title, url) + "\n";
+                            html += "cat " + quoteSlashIfNeeded(escapedPath) + "\n";
+                        }
+                    }
+
+                    // checkout branch
+                    var branch = args['branch'];
+                    if(branch) {
+                        var url = branchUrlForArgs(link, args);
+                        html += "\n# checkout " + possibleAnchor(branch, url) + " branch\n";
+                        html += "git checkout " + escape(branch) + "\n";
+                    }
+
+                    // checkout commit
+                    var commit = args['commit'];
+                    if(commit) {
+                        var url = commitUrlForArgs(link, args);
+                        html += "\n# show diff for commit " + possibleAnchor(commit.substr(0,10), url) + "\n";
+                        html += "git diff " + escape(commit.substr(0,10)) + "\n";
+                        html += "\n# detach to commit " + possibleAnchor(commit.substr(0,10), url) + "\n";
+                        html += "git checkout " + escape(commit.substr(0,10)) + "\n";
+                    }
+                }
+
+                html = html + footer;
+                html = html.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                var terminal = $('.terminal');
+                $(terminal).html(html);
+                $(terminal).css('opacity', '1.0');
+
+                var checkLinks = false;
+                if(checkLinks) {
+                    $('a.guess').click(function(e) {
+                        e.preventDefault();
+                        var href = $(this).attr("href");
+                        $.ajax({async: true, url: "/check/?" + href,
+                            success: function(){
+                                window.location = href;
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                var status = jqXHR.status;
+                                if(status >= 300 && status < 400) {
+                                    // ignore non-fatal errors such as redirection
+                                    window.location = href;
+                                    return;
+                                }
+
+                                var leadingUpper = textStatus.charAt(0).toUpperCase() + textStatus.slice(1);
+                                var message = "Unable to open " + href + "\n" +
+                                        leadingUpper + ": " + errorThrown;
+                                showError(message);
+                            }
+                        });
+                    });
+                }
+            }
+
+            function getScript(url,success){
+                var script=document.createElement('script');
+                script.src=url;
+                var head=document.getElementsByTagName('head')[0],
+                        done=false;
+                script.onload=script.onreadystatechange = function(){
+                    if ( !done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete') ) {
+                        done=true;
+                        success();
+                        script.onload = script.onreadystatechange = null;
+                        head.removeChild(script);
+                    }
+                };
+                head.appendChild(script);
+            }
+
+            getScript('../js/jquery-1.12.4.min.js',function(){
+                $('.email').each(function(){
+                    $(this).attr("href", "mailto:" + rev("moc.ppaypocgnikrow@sredna"));
+                });
+
+                window.onhashchange = populateTerminal;
+                populateTerminal();
+
+                $('.modal').click(function() {
+                    $('.modal').hide();
+                    $('.guru').hide();
+                });
+            });
+        })();
+
+    </script>
+</head><body><div class="guru"></div>
+<div class="modal">
+</div>
+<div class="terminal"></div>
+<!--[if lt IE 7 ]>
+<script src="../js/dd_belatedpng.js"></script>
+<script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb</script>
+<![endif]-->
+</body>
+</html>
