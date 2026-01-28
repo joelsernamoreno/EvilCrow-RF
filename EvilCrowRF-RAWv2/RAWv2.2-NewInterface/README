@@ -1,8 +1,0 @@
-1.- Download the following libraries in the arduino library directory:
-
-* https://github.com/me-no-dev/AsyncTCP
-* https://github.com/me-no-dev/ESPAsyncWebServer
-
-2.- Edit AsyncTCP/src/AsyncTCP.h and change the following:
-
-* #define CONFIG_ASYNC_TCP_USE_WDT 1 to #define CONFIG_ASYNC_TCP_USE_WDT 0 
