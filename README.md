@@ -31,20 +31,14 @@ You can invite me for a coffee to further develop Low-Cost hacking devices. If y
 
 1. Disclaimer
 2. Introduction
-3. Firmware	
+3. Firmware
 	* Installation
 	* First steps with Evil Crow RF
-	* RX Config Example
-	* RX Log Example
-	* RAW TX Config Example
-	* Binary TX Config Example
-	* Pushbuttons Configuration
-	* Tesla Charge Door Opener
-	* OTA Update
-	* Wi-Fi Config
-	* Power management
-	* Other Sketches
-	* Public Demo
+	* Home
+	* RX Config
+	* Log Viewer
+	* TX Config
+	* Config
 4. Advanced Firmware with RFQuack
 	* Installation and first steps
 	* RX Example
@@ -95,143 +89,98 @@ The basic firmware allows to receive and transmit signals. You can configure the
 
 1. Install esptool: sudo apt install esptool
 2. Install pyserial: sudo pip install pyserial
-3. Download and Install the Arduino IDE: https://www.arduino.cc/en/main/software
+3. Download and install the latest version of Arduino IDE (v2.3.6): https://www.arduino.cc/en/main/software
 4. Download EvilCrow-RF repository: git clone https://github.com/joelsernamoreno/EvilCrow-RF.git
-5. Download and Install the Arduino IDE: https://www.arduino.cc/en/main/software
-6. Download the ESPAsyncWebServer library in the Arduino library directory: git clone https://github.com/me-no-dev/ESPAsyncWebServer.git
-7. Download the AsyncElegantOTA library in the Arduino library directory: git clone https://github.com/ayushsharma82/AsyncElegantOTA.git
-8. Download the AsyncTCP library in the Arduino library directory: git clone https://github.com/me-no-dev/AsyncTCP.git
-9. Edit AsyncTCP/src/AsyncTCP.h and change the following:
+5. Download the ESPAsyncWebServer library in the Arduino library directory: git clone https://github.com/ESP32Async/ESPAsyncWebServer.git
+6. Download the ElegantOTA library in the Arduino library directory: git clone https://github.com/ayushsharma82/ElegantOTA.git
+7. Edit ElegantOTA/src/ElegantOTA.h and chage the following:
 
-* #define CONFIG_ASYNC_TCP_USE_WDT 1 to #define CONFIG_ASYNC_TCP_USE_WDT 0
+* #define ELEGANTOTA_USE_ASYNC_WEBSERVER 0 to #define ELEGANTOTA_USE_ASYNC_WEBSERVER 1
 
-10. Open Arduino IDE
-11. Go to File - Preferences. Locate the field "Additional Board Manager URLs:" Add "https://dl.espressif.com/dl/package_esp32_index.json" without quotes. Click "Ok"
-12. Select Tools - Board - Boards Manager. Search for "esp32". Install "esp32 by Espressif system version 1.0.4". Click "Close".
-13. Open the EvilCrow-RF/EvilCrowRF-RAWv2/RAWv3.0-NewInterface/RAWv3.0-NewInterface.ino sketch
-14. Select Tools:
+8. Download the AsyncTCP library in the Arduino library directory: git clone https://github.com/ESP32Async/AsyncTCP.git
+9. Open Arduino IDE
+10. Go to File - Preferences. Locate the field "Additional Board Manager URLs:" Add "https://espressif.github.io/arduino-esp32/package_esp32_index.json" without quotes. Click "Ok"
+11. Select Tools - Board - Boards Manager. Search for "esp32". Install "esp32 by Espressif system version 3.3.2". Click "Close".
+12. Open the EvilCrow-RF/firmware/firmware/firmware.ino sketch
+13. Select Tools:
     * Board - "ESP32 Dev Module".
     * Flash Size - "4MB (32Mb)".
-    * CPU Frequency - "240MHz (WiFi/BT)".
-    * Flash Frequency - "80MHz"
+    * CPU Frequency - "80MHz (WiFi/BT)".
+    * Flash Frequency - "40MHz"
     * Flash Mode - "DIO"
-15. Upload the code to the EvilCrow-RF device.
-16. Press reset button
+14. Upload the code to the Evil Crow RF device
+15. Press reset button
 
-## First steps with EvilCrow-RF
+## First steps with Evil Crow RF
 
-1. Visualize the wifi networks around you and connect to the EvilCrow-RF (default SSID: RAW Replay v3).
-2. Enter the password for the wifi network (default password: 123456789).
-3. Open a browser and access the web panel (default IP: 192.168.4.1).
-4. Go!
+1. Set up a Wi-Fi AP with your mobile phone:
+	* **SSID:** Evil Crow RF
+	* **Password:** 123456789ECRFv1
+2. Connect your laptop to the same Wi-Fi network.
+3. Open a browser and access the web panel: http://evilcrow-rf.local/
 
-![Index](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/index.png)
+**Note:** If you cannot access the web panel, use the IP address assigned to Evil Crow RF or follow below steps **only if you are running Linux OS:**
+ * check if avahi-deamon is installed and running on your PC. You can do this with executing "sudo systemctl status avahi-daemon" in terminal
+ * If service is not running, install it using your package manager (apt, yum, dnf, Packman, rpm,...)
+ * After successful installation, start avahi-daemon service with "sudo systemctl start avahi-daemon && sudo systemctl enable avahi-daemon"
+ * In case evilcrow-rf.local is still not reachable, use http://"IP address", where "IP address" is IP assigned to Evil Crow RF.
+ 
+## Home
 
-## RX Config Example
+The Home page shows interesting information about the device.
+
+![Home](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/home.png)
+
+## RX Config
+
+The RX Config page allows you to configure the CC101 modules for receiving signals. The received signals are displayed in the Log Viewer.
 
 * Module: (1 for first CC1101 module, 2 for second CC1101 module)
 * Modulation: (example ASK/OOK)
 * Frequency: (example 433.92)
-* RxBW bandwidth: (example 58)
+* Rx bandwidth: (example 200)
 * Deviation: (example 0)
 * Data rate: (example 5)
 
-![RXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-config.png)
+![RX](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx.png)
 
-**2-FSK NOTES:**
-
-* Evil Crow RF allows 2-FSK (RX/TX) modulation, this is configured for use with CC1101 module 2. Do not use CC1101 module 1 for 2-FSK RX. 
-
-* You can use 2-FSK TX with module 1 or with module 2. 
-
-* Evil Crow RF allows you to receive signals at the same time on two different frequencies, but this does not work correctly if you use 2-FSK. Make sure you use module 2 for 2-FSK RX, while doing this do not use module 1 for anything or you will not receive the 2-FSK signals correctly. 
-
-* You can receive two signals on different frequencies with ASK/OOK.
-
-## RX Log Example
+## Log Viewer
 
 ![RXLog](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/rx-log.png)
 
-## RAW TX Config Example
+## TX Config
+
+The TX Config page allows you to transmit a raw data signal or enable/disable the jammer.
+
+![TXCONFIG](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/txconfig.png)
+
+* **TX Raw Data:**
 
 * Module: (1 for first CC1101 module, 2 for second CC1101 module)
 * Modulation: (example ASK/OOK)
-* Transmissions: (number transmissions)
 * Frequency: (example 433.92)
-* RAW Data: (raw data or raw data corrected displayed in RX Log)
+* RAW Data: (raw data or raw data corrected displayed in Log Viewer)
 * Deviation: (example 0)
 
-![TXConfig](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/tx-config.png)
+![TXRAW](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/txraw.png)
 
-## Binary TX Config Example
+* **Jammer:**
 
 * Module: (1 for first CC1101 module, 2 for second CC1101 module)
-* Modulation: (example ASK/OOK)
-* Transmissions: (number transmissions)
-* Frequency: (example 433.92)
-* Binary Data: (binary data displayed in RX Log)
-* Sample Pulse: (samples/symbol displayed in RX Log)
-* Deviation: (example 0)
+* Frequency: (example: 433.92)
+* Jammer Power: (example: 12)
 
-![TXBinary](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/tx-binary.png)
+![JAMMER](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/jammer.png)
 
+## Config
 
-## Pushbuttons Configuration
+The Config page allows you to change the Wi-Fi configuration.
 
-![PB](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pb.png)
-
-* Button: (1 for first pushbutton, 2 for second pushbutton)
-* Modulation: (example ASK/OOK)
-* Transmissions: (number transmissions)
-* Frequency: (example 433.92)
-* RAW Data: (raw data or raw data corrected displayed in RX Log)
-* Deviation: (example 0)
-
-![Pushbutton](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/pushbutton.png)
-
-## Tesla Charge Door Opener
-
-Demo: https://www.youtube.com/watch?v=feNokjfEGgs
-
-## OTA Update
-
-Demo: https://www.youtube.com/watch?v=YQFNLyHu42A
-
-## WiFi Config
-
-Evil Crow RF is configured in AP mode with a default SSID and password. You can change the mode to STATION or AP, change SSID, change password and change Wi-Fi channel remotely from the web panel.
+**NOTE:** Evil Crow RF is configured in STATION MODE. You can change the ssid and password from the web panel.
 
 The changes will be stored in the device, every time you restart Evil Crow RF the new Wi-Fi settings will be applied. If you want to return to the default settings, you can delete the stored Wi-Fi configuration from the web panel.
 
-**NOTE:** When changing the Wi-Fi configuration you have to fill in all the fields correctly, if you do not do this you bricked the device.
-
-## Power Management
-
-1. In normal mode, press push2 + reset, then release reset: Evil Crow RF blinks several times and goes to sleep. 
-2. In sleep mode, press push2 + reset, then release reset to wake him up.
-
-Demo: https://www.youtube.com/shorts/K_Qkss6-pEY
-
-**NOTE:** If Evil Crow RF is sleeping and you accidentally press reset, he'll go straight back to sleep. If he isn't asleep and you press reset then he will stay awake too.
-
-## Other Sketches
-
-You can program Evil Crow RF with other configurations without using the basic firmware. In the OtherSketches folder you can find two examples: 
-
-* ASK_RAW_RX.ino: Receive raw data (Only ASK)
-* ASK_RAW_TX.ino: Transmit raw data (Only ASK)
-* EvilCrowRF-RAWv2_Pushbutton: Two new sketches for using Evil Crow RF with push buttons: RawPushButton_Basic and
-RawPushButton_Web. Read the document EvilCrowRF-RAWv2 Pushbutton.pdf for more information.
-
-Read the code to know how to configure this for your environment.
-
-Additionally, you can develop other sketches for Evil Crow RF and PR to this repository :)
-
-## Public Demo:
-
-* Replay attack with pushbuttons: https://twitter.com/JoelSernaMoreno/status/1343573202967126022
-* Simple Brute Force: https://twitter.com/JoelSernaMoreno/status/1344798890516770817
-* Hacking a X-RAY Machine with WHIDelite & EvilCrowRF: https://lucabongiorni.medium.com/hacking-a-x-ray-machine-with-whidelite-evilcrowrf-74b871f8e23b
+![CONFIG](https://github.com/joelsernamoreno/EvilCrow-RF/blob/main/images/configwifi.png)
 
 # Advanced Firmware with RFQuack
 
