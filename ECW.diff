@@ -1,0 +1,32 @@
+diff --git a/.devcontainer/devcontainer.json b/.devcontainer/devcontainer.json
+new file mode 100644
+index 0000000..ad93c14
+--- /dev/null
++++ b/.devcontainer/devcontainer.json
+@@ -0,0 +1,5 @@
++{
++  "image": "mcr.microsoft.com/devcontainers/universal:2",
++  "features": {
++  }
++}
+diff --git a/.whitesource b/.whitesource
+new file mode 100644
+index 0000000..9c7ae90
+--- /dev/null
++++ b/.whitesource
+@@ -0,0 +1,14 @@
++{
++  "scanSettings": {
++    "baseBranches": []
++  },
++  "checkRunSettings": {
++    "vulnerableCheckRunConclusionLevel": "failure",
++    "displayMode": "diff",
++    "useMendCheckNames": true
++  },
++  "issueSettings": {
++    "minSeverityLevel": "LOW",
++    "issueType": "DEPENDENCY"
++  }
++}
+\ No newline at end of file
